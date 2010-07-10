@@ -2,7 +2,7 @@
 
 NotifyMe is a script running as a cronjob in background,  can take care more than one tasks (by Ruby Threads), and push the result to different endpoints(stdout, mail, file etc.) with different formats such as xml, json, csv etc. depends on what's you need.
 
-== Instalation
+== Installation
 
 gem install notifyme
 
