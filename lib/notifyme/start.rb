@@ -73,7 +73,11 @@ module NotifyMe
             end
             unless task.result.to_s.empty?
                 @mutex.synchronize do 
+									begin
                     task.logger << task
+									rescue Exception =>  e
+										puts e.backtrace.join("\n")
+									end
                 end
             end
         end
