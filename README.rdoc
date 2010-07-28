@@ -20,9 +20,13 @@ $ notifyme_daemon run -- /path/to/notifyme_config.rb
 
 $ notifyme_daemon stop
 
+== Example
+
+Please check the notifyme_config.rb file.
+
 == Output
 
-The output from every task's command will be processed (send to endpoint) only if the output is not empty, otherwise do noghing.
+The output from every task's command will be processed (send to endpoint) only if the output is not empty, otherwise do nothing.
 
 == Version
 
