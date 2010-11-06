@@ -30,7 +30,7 @@ The output from every task's command will be processed (send to endpoint) only i
 
 == Version
 
-v 0.1
+v 0.2
 
 == Author
 

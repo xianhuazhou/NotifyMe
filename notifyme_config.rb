@@ -1,46 +1,44 @@
 class MyTask
-    def call
-        Time.now.to_s
-    end
+  def call
+    Time.now.to_s
+  end
 end
 
-
 NotifyMe::Start.config do
-
-    log :stdout
+  log :stdout
 
 =begin
-    log :mail, 
-        :host => 'smtp.gmail.com',
-        :helo_domain => 'gmail.com',
-        :tls => true,
+  log :mail, 
+    :host => 'smtp.gmail.com',
+    :helo_domain => 'gmail.com',
+    :tls => true,
 
-        :account => 'xxx@gmail.com', 
-        :password => '***',
+    :account => 'xxx@gmail.com', 
+    :password => '***',
 
-        :from_email => 'from@gmail.com',
-        :from_name => 'from name',
-        :to_email => 'to@gmail.com',
-        :to_name => 'to name'
-
+    :from_email => 'from@gmail.com',
+    :from_name => 'from name',
+    :to_email => 'to@gmail.com',
+    :to_name => 'to name'
 =end
-    # log :file, '/tmp/test.txt'
-    # log :stdout
-    # log :mail, :to_email => 'to@email.com'
 
-    # :csv, :text, :xml, :json
-    log_format :json 
+  # log :file, '/tmp/test.txt'
+  # log :stdout
+  # log :mail, :to_email => 'to@email.com'
 
+  # :csv, :text, :xml, :json
+  log_format :json 
 
-    # add some tasks
+  # add some tasks
 
-    task :checking_disk do |t|
-        t.sleep_time = 1
-        t.command = Proc.new { %x{df -h} }
-    end
+  task :checking_disk do |t|
+    t.sleep_time = 1
+    t.command = Proc.new { %x{df -h} }
+  end
 
-    task :checking_http do |t|
-        t.sleep_time = 2
-        t.command = MyTask
-    end
+  task :checking_http do |t|
+    t.sleep_time = 2
+    t.command = MyTask
+    t.restart_command = lambda { puts "restarted !" }
+  end
 end

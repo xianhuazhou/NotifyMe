@@ -71,13 +71,18 @@ module NotifyMe
       rescue Exception => e
         task.result = e.to_s
       end
-      unless task.result.to_s.empty?
-        @mutex.synchronize do 
-          begin
-            task.logger << task
-          rescue Exception =>  e
-            puts e.backtrace.join("\n")
-          end
+
+      # works fine.
+      return if task.result.to_s.empty?
+
+      # restart the command if need
+      task.restart_command.call if task.restart_command
+
+      @mutex.synchronize do 
+        begin
+          task.logger << task
+        rescue Exception =>  e
+          puts e.backtrace.join("\n")
         end
       end
     end
