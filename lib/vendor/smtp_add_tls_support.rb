@@ -52,14 +52,14 @@ Net::SMTP.class_eval do
     check_auth_args user, secret if user or secret
 
     sock = timeout(@open_timeout) {
-        TCPSocket.open(@address, @port)
+      TCPSocket.open(@address, @port)
     }
     @socket = Net::InternetMessageIO.new(sock)
     @socket.read_timeout = @read_timeout
     @socket.debug_output = nil
 
     check_response(critical{
-        recv_response()
+      recv_response()
     })
     do_helo(helodomain)
 
