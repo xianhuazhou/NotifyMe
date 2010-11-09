@@ -29,16 +29,18 @@ NotifyMe::Start.config do
   # :csv, :text, :xml, :json
   log_format :json 
 
+  # log_directory '/tmp/notifyme'
+
   # add some tasks
 
   task :checking_disk do |t|
-    t.sleep_time = 1
+    t.sleep_time = 3
     t.command = Proc.new { %x{df -h} }
   end
 
   task :checking_http do |t|
     t.sleep_time = 2
     t.command = MyTask
-    t.restart_command = lambda { puts "restarted !" }
+    t.restart_command = Proc.new { %x{dates} }
   end
 end

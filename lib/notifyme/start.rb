@@ -1,9 +1,9 @@
+require 'notifyme/task'
+require 'notifyme/log'
+
 module NotifyMe
 
-  VERSION = '0.1'
-
-  autoload :Task, 'notifyme/task'
-  autoload :Log, 'notifyme/log'
+  VERSION = '0.3'
 
   class Start
     class << self
@@ -11,6 +11,7 @@ module NotifyMe
       # log 
       @@log_args = nil
       @@log_format = nil
+      @@log_directory = nil
 
       # tasks list
       @@tasks = []
@@ -28,7 +29,7 @@ module NotifyMe
 
       def task(name)
         raise 'Invalid task calls' unless block_given?
-        task = Task.new
+        task = NotifyMe::Task.new
         task.name = name
         task.logger ||= NotifyMe::Log::Base.new(@@log_args).logger
         task.log_format ||= @@log_format
@@ -42,6 +43,11 @@ module NotifyMe
 
       def log_format(format)
         @@log_format = format
+      end
+
+      def log_directory(directory)
+        FileUtils.mkdir_p directory unless File.directory? directory
+        @@log_directory = directory
       end
     end
 
@@ -69,6 +75,7 @@ module NotifyMe
         task.result = task.command.call
         task.end_run_time = Time.now.to_i
       rescue Exception => e
+        log_error task.name, task.command, e.to_s
         task.result = e.to_s
       end
 
@@ -76,7 +83,11 @@ module NotifyMe
       return if task.result.to_s.empty?
 
       # restart the command if need
-      task.restart_command.call if task.restart_command
+      begin
+        task.restart_command.call if task.restart_command
+      rescue Exception => e
+        log_error task.name, task.restart_command, e.to_s
+      end
 
       @mutex.synchronize do 
         begin
@@ -84,6 +95,14 @@ module NotifyMe
         rescue Exception =>  e
           puts e.backtrace.join("\n")
         end
+      end
+    end
+
+    def log_error(task_name, command, msg)
+      return if @@log_directory.nil?
+      log_file = File.join(@@log_directory, '/', "#{task_name}.log")
+      File.open(log_file, 'a') do |f|
+        f.write "(#{Time.new.to_s}) #{command} : #{msg}\n"
       end
     end
 
