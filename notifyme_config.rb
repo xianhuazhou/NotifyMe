@@ -38,7 +38,7 @@ NotifyMe::Start.config do
     t.command = Proc.new { %x{df -h} }
   end
 
-  task :checking_http do |t|
+  task :checking_date do |t|
     t.sleep_time = 2
     t.command = MyTask
     t.restart_command = Proc.new { %x{dates} }

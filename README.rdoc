@@ -10,11 +10,11 @@ gem install notifyme
 
 # run in the background
 
-$ notifyme_daemon start --(double dash here) /path/to/notifyme_config.rb
+$ notifyme_daemon start --(double dash here) /absolute/path/to/notifyme_config.rb
 
 # debug (use Ctrl + C to stop it)
 
-$ notifyme_daemon run --(double dash here) /path/to/notifyme_config.rb
+$ notifyme_daemon run --(double dash here) /absolute/path/to/notifyme_config.rb
 
 # stop
 
@@ -30,7 +30,7 @@ The output from every task's command will be processed (send to endpoint) only i
 
 == Version
 
-v 0.2
+v 0.3
 
 == Author
 
