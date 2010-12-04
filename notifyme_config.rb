@@ -1,9 +1,3 @@
-class MyTask
-  def call
-    Time.now.to_s
-  end
-end
-
 NotifyMe::Start.config do
   log :stdout
 
@@ -33,14 +27,32 @@ NotifyMe::Start.config do
 
   # add some tasks
 
-  task :checking_disk do |t|
-    t.sleep_time = 3
-    t.command = Proc.new { %x{df -h} }
+  #
+  # check disk space usage every 60 seconds, 
+  # if one of the disks' space usage > 95%, notification will be sent.
+  #
+  task :checking_disk_usage do |t|
+    t.sleep_time = 60 
+    t.command = lambda {
+      if %x{df -h}.scan(/\s+(\d+)%\s+/).find {|pcent| pcent.first.to_i > 95} 
+        "Warnning: at least 1 disk space usage > 95%"
+      else
+        nil 
+      end
+    } 
   end
 
-  task :checking_date do |t|
-    t.sleep_time = 2
-    t.command = MyTask
-    t.restart_command = Proc.new { %x{dates} }
+  task :checking_localhost_http do |t|
+    t.sleep_time = 5
+    t.command = lambda { 
+      require 'socket'
+      begin
+        TCPSocket.new('localhost', 80)
+        nil
+      rescue Exception => e
+        e.to_s
+      end
+    } 
+    t.restart_command = lambda { %x{/etc/init.d/httpd start} }
   end
 end
