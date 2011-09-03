@@ -48,8 +48,6 @@ module NotifyMe
                   ) do |mail|
                     mail.send_message message(param, task), param[:from_email], recipients 
                   end
-      rescue => e
-        p e
       end
 
       private
@@ -69,9 +67,9 @@ module NotifyMe
         << "Subject: #{param[:subject]}\r\n" \
         << "Date: #{time.to_s}\r\n" \
         << "Content-type: text/plain; charset=UTF-8\r\n" \
-        << "Message-Id: <notifyme.#{task.name}.#{time.to_i}@example.com>\r\n" \
+          << "Message-Id: <notifyme.#{task.name}.#{time.to_i}@example.com>\r\n" \
         << "\r\n" \
-        << param[:body]
+          << param[:body]
       end
     end
   end
