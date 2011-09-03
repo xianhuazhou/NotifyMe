@@ -12,8 +12,13 @@ NotifyMe::Start.config do
 
     :from_email => 'from@gmail.com',
     :from_name => 'from name',
+
     :to_email => 'to@gmail.com',
     :to_name => 'to name'
+
+    # or
+    :to_email => {'User a' => 'a@gmail.com', 'User b' => 'b@gmail.com'}
+    :to_email => ['User a <a@gmail.com>', 'User b<b@gmail.com'] 
 =end
 
   # log :file, '/tmp/test.txt'
