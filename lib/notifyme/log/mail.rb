@@ -36,25 +36,42 @@ module NotifyMe
         )
 
         # go go go!
+        recipients = if param[:to_email].is_a? Hash
+                       param[:to_email].values
+                     else
+                       param[:to_email]
+                     end
         smtp.start(param[:helo_domain] || default_host, 
                    param[:account], 
                    param[:password], 
-                   param[:authtype] || :plain) do |mail|
-          mail.send_message message(param, task), param[:from_email], param[:to_email]
-                   end
+                   param[:authtype] || :plain
+                  ) do |mail|
+                    mail.send_message message(param, task), param[:from_email], recipients 
+                  end
+      rescue => e
+        p e
       end
 
       private
       def message(param, task)
+        to = case param[:to_email]
+             when Hash
+               param[:to_email].collect{|k, v| "#{k} <#{v}>" }.join(', ')
+             when Array
+               param[:to_email].collect{|v| "#{v.split('@').first} <#{v}>"}.join(", ")
+             else
+               "#{param[:to_name] || param[:to_email].split('@').first} <#{param[:to_email]}>"
+             end
+
         time = Time.now
         "From: #{param[:from_name] || param[:from_email]} <#{param[:from_email]}>\r\n" \
-        << "To: #{param[:to_name] || param[:to_email]} <#{param[:to_email]}>\r\n" \
+        << "To: #{to}\r\n" \
         << "Subject: #{param[:subject]}\r\n" \
         << "Date: #{time.to_s}\r\n" \
         << "Content-type: text/plain; charset=UTF-8\r\n" \
-          << "Message-Id: <notifyme.#{task.name}.#{time.to_i}@example.com>\r\n" \
+        << "Message-Id: <notifyme.#{task.name}.#{time.to_i}@example.com>\r\n" \
         << "\r\n" \
-          << param[:body]
+        << param[:body]
       end
     end
   end
