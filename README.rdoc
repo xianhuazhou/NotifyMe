@@ -83,7 +83,7 @@ The output from every task's command will be processed (send to endpoint) only i
 
 == Version
 
-v 0.3
+v 0.4
 
 == TODO
 

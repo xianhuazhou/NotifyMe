@@ -3,7 +3,7 @@ require 'notifyme/log'
 
 module NotifyMe
 
-  VERSION = '0.3'
+  VERSION = '0.4'
 
   class Start
     class << self

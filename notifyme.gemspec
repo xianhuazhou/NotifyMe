@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project = 'notifyme'
 
   s.name = "notifyme"
-  s.version = '0.3'  
+  s.version = '0.4'  
   s.author = 'xianhua.zhou'  
   s.email = 'xianhua.zhou@gmail.com'
 
