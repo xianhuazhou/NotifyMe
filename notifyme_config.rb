@@ -40,7 +40,7 @@ NotifyMe::Start.config do
     t.sleep_time = 60 
     t.command = lambda {
       if %x{df -h}.scan(/\s+(\d+)%\s+/).find {|pcent| pcent.first.to_i > 95} 
-        "Warnning: at least 1 disk space usage > 95%"
+        "Warning: at least 1 disk space usage > 95%"
       else
         nil 
       end
