@@ -49,15 +49,7 @@ NotifyMe::Start.config do
 
   task :checking_localhost_http do |t|
     t.sleep_time = 5
-    t.command = lambda { 
-      require 'socket'
-      begin
-        TCPSocket.new('localhost', 80)
-        nil
-      rescue Exception => e
-        e.to_s
-      end
-    } 
+    t.command = lambda { check :tcp, :host => 'localhost', :port => 80 }
     t.restart_command = lambda { %x{/etc/init.d/httpd start} }
   end
 end

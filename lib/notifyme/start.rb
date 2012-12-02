@@ -1,9 +1,10 @@
-require 'notifyme/task'
-require 'notifyme/log'
-
 module NotifyMe
 
   VERSION = '0.4'
+
+  autoload :Task, 'notifyme/task'
+  autoload :Log, 'notifyme/log'
+  autoload :Check, 'notifyme/check'
 
   class Start
     class << self
@@ -18,7 +19,16 @@ module NotifyMe
 
       def run!
         puts 'NotifyMe v' + NotifyMe::VERSION
+        load_custom_check_functions
         new(ARGV[0]).run
+      end
+
+      def load_custom_check_functions
+        file = File.join ENV['HOME'], ".notifyme", "check.rb"
+        if File.exists? file
+          load file
+          puts "Loaded custom check functions from #{file}."
+        end
       end
 
       def config(&block)
@@ -35,6 +45,15 @@ module NotifyMe
         task.log_format ||= @@log_format
         yield task
         @@tasks << task
+      end
+
+      def check(name, args = {})
+        begin
+          NotifyMe::Check.method(name).call args
+          nil
+        rescue Exception => e
+          "Check #{name} failed: #{e}"
+        end
       end
 
       def log(*args)
