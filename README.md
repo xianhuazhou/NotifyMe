@@ -1,12 +1,12 @@
-== Introduction
+## Introduction
 
 NotifyMe is a script running as a cronjob in background,  can take care more than one tasks (by Ruby Threads), and push the results(error messages usually) to different endpoints(stdout, mail, file etc.) with different formats such as xml, json, csv etc. if something goes wrong. It depends on what's you need.
 
-== Installation
+## Installation
 
 gem install notifyme
 
-== Run it
+## Run it
 
 # run in the background
 
@@ -20,9 +20,9 @@ gem install notifyme
 
     $ notifyme_daemon stop
 
-== Examples
+## Examples
 
-== Check HTTP Server (e.g. Nginx)
+## Check HTTP Server (e.g. Nginx)
 
 ```ruby
   require 'socket'
@@ -50,7 +50,7 @@ gem install notifyme
   end
 ```
 
-== Check the "cupsd" process (from "ps -e")
+## Check the "cupsd" process (from "ps -e")
 
 ```ruby
   NotifyMe::Start.config do
@@ -72,7 +72,7 @@ gem install notifyme
 
 More please check the notifyme_config.rb file.
 
-== built-in check functions (since v1.0.0)
+## built-in check functions (since v1.0.0)
 
 So far, NotifyMe has 2 built-in check functions, which are "check :process" and "check :tcp", e.g.:
 
@@ -81,7 +81,7 @@ t.command = lambda { check :process, :name => "nginx"}
 t.command = lambda { check :tcp, :host => "localhost", :port => 80}
 ```
 
-== Add custom check functions into the "~/.notifyme/check.rb" file (since v1.0.0)
+## Add custom check functions into the "~/.notifyme/check.rb" file (since v1.0.0)
 
 You also can write your own check functions into the `~/.notifyme/check.rb` file, e.g.
 
@@ -107,7 +107,7 @@ task :check_mysql do |t|
 end
 ```
 
-== Add tasks into the "~/.notifyme/check/" directory (since v1.0.0)
+## Add tasks into the "~/.notifyme/check/" directory (since v1.0.0)
 
 Instead of put all of tasks into the `notifyme_config.rb` file. you can also put them into the `~/.notifyme/check/` directory, one task one file, it's easy to manage them if you have too many things to check.
 e.g.
@@ -121,14 +121,14 @@ def check_redis(t)
 end
 ```
 
-== Output
+## Output
 
 The output from every task's command will be processed (send to endpoints such as email, console etc.) only if the output is not empty, otherwise do nothing.
 
-== Version
+## Version
 
 v 1.0.0
 
-== TODO
+## TODO
 
 Add some SPECS
