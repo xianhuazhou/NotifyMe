@@ -6,23 +6,23 @@ NotifyMe is a script running as a cronjob in background,  can take care more tha
 
 gem install notifyme
 
-## Run it
+## Run it (with root permission)
 
-# run in the background
+### run in the background
 
-    $ notifyme_daemon start --(double dash here) /absolute/path/to/your/notifyme_config.rb
+    # notifyme_daemon start --(double dash here) /absolute/path/to/your/notifyme_config.rb
 
-# debug (use Ctrl + C to stop it)
+### debug (use Ctrl + C to stop it)
 
-    $ notifyme_daemon run --(double dash here) /absolute/path/to/your/notifyme_config.rb
+    # notifyme_daemon run --(double dash here) /absolute/path/to/your/notifyme_config.rb
 
-# stop
+### stop
 
-    $ notifyme_daemon stop
+    # notifyme_daemon stop
 
 ## Examples
 
-## Check HTTP Server (e.g. Nginx)
+### Check HTTP Server (e.g. Nginx)
 
 ```ruby
   require 'socket'
@@ -50,7 +50,7 @@ gem install notifyme
   end
 ```
 
-## Check the "cupsd" process (from "ps -e")
+### Check the "cupsd" process (from "ps -e")
 
 ```ruby
   NotifyMe::Start.config do

@@ -12,7 +12,19 @@ module NotifyMe
       @command = get_command(cmd)
     end
 
+    def start_run_time
+      format_time @start_run_time
+    end
+
+    def end_run_time
+      format_time @start_run_time
+    end
+
     private
+    def format_time(time)
+      Time.at(time).strftime('%Y-%m-%d %H:%M:%S %Z')
+    end
+
     def get_command(cmd)
       return if cmd.nil?
 
