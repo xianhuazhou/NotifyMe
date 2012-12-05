@@ -1,5 +1,5 @@
 NotifyMe::Start.config do
-  log :file, '/tmp/test.txt'
+  log :stdout
 
 =begin
   log :mail, 
