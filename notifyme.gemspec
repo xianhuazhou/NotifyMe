@@ -1,16 +1,18 @@
+require File.expand_path(File.join(File.dirname(__FILE__), 'lib', 'notifyme', 'start'))
+
 Gem::Specification.new do |s|  
   s.homepage = 'http://github.com/xianhuazhou/NotifyMe'
   s.rubyforge_project = 'notifyme'
 
   s.name = "notifyme"
-  s.version = '0.4'  
-  s.author = 'xianhua.zhou'  
+  s.version = NotifyMe::VERSION
+  s.author = 'xianhua.zhou'
   s.email = 'xianhua.zhou@gmail.com'
 
-  s.platform = Gem::Platform::RUBY  
+  s.platform = Gem::Platform::RUBY
 
   s.summary = "It's a kind of cronjob."
-  s.description = "NotifyMe takes care more than one tasks and process their results for you, it's similar to the *NIX's cronjob."
+  s.description = "NotifyMe takes care more than one tasks and process their results for you, it's similar to *NIX's cronjob."
 
   s.bindir = 'bin'
   s.executables = ['notifyme_daemon', 'notifyme']

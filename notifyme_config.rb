@@ -37,14 +37,14 @@ NotifyMe::Start.config do
   # if one of the disks' space usage > 95%, notification will be sent.
   #
   task :checking_disk_usage do |t|
-    t.sleep_time = 60 
+    t.sleep_time = 60
     t.command = lambda {
-      if %x{df -h}.scan(/\s+(\d+)%\s+/).find {|pcent| pcent.first.to_i > 95} 
+      if %x{df -h}.scan(/\s+(\d+)%\s+/).find {|pcent| pcent.first.to_i > 95}
         "Warning: at least 1 disk space usage > 95%"
       else
-        nil 
+        nil
       end
-    } 
+    }
   end
 
   task :checking_localhost_http do |t|

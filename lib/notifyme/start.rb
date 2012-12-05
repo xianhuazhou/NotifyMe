@@ -1,6 +1,6 @@
 module NotifyMe
 
-  VERSION = '0.4'
+  VERSION = '1.0.0'
 
   autoload :Task, 'notifyme/task'
   autoload :Log, 'notifyme/log'
@@ -10,9 +10,9 @@ module NotifyMe
     class << self
 
       # log 
-      @@log_args = nil
-      @@log_format = nil
-      @@log_directory = nil
+      @@log_args = [:stdout]
+      @@log_format = :text
+      @@log_directory = "/tmp"
 
       # tasks list
       @@tasks = []
@@ -24,10 +24,23 @@ module NotifyMe
       end
 
       def load_custom_check_functions
-        file = File.join ENV['HOME'], ".notifyme", "check.rb"
+        custom_notifyme_dir = File.join(ENV['HOME'], ".notifyme")
+        file = File.join(custom_notifyme_dir, "check.rb")
         if File.exists? file
           load file
           puts "Loaded custom check functions from #{file}."
+        end
+
+        task_files = File.join(custom_notifyme_dir, 'check', '*.rb')
+        Dir[task_files].each do |task_file|
+          load task_file
+          task_name = File.basename(task_file.sub('.rb', ''))
+          task_func = "check_#{task_name}"
+          if defined? task_func
+            task task_func do |t|
+              method(task_func).call t
+            end
+          end
         end
       end
 
@@ -39,6 +52,7 @@ module NotifyMe
 
       def task(name)
         raise 'Invalid task calls' unless block_given?
+        puts "Added task #{name}"
         task = NotifyMe::Task.new
         task.name = name
         task.logger ||= NotifyMe::Log::Base.new(@@log_args).logger
