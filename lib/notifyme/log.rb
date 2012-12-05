@@ -13,6 +13,7 @@ module NotifyMe
         begin
           require "notifyme/log/#{@logger}.rb"
         rescue Exception => e
+          raise "The #{@logger} is invalid."
         end
         NotifyMe::Log.const_get(@logger.capitalize).new @parameters
       end

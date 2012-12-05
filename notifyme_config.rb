@@ -1,5 +1,5 @@
 NotifyMe::Start.config do
-  log :stdout
+  log :file, '/tmp/test.txt'
 
 =begin
   log :mail, 
@@ -26,9 +26,9 @@ NotifyMe::Start.config do
   # log :mail, :to_email => 'to@email.com'
 
   # :csv, :text, :xml, :json
-  log_format :json 
+  log_format :text
 
-  # log_directory '/tmp/notifyme'
+  log_directory '/tmp/notifyme'
 
   # add some tasks
 

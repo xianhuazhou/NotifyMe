@@ -20,17 +20,20 @@ module NotifyMe
       def run!
         puts 'NotifyMe v' + NotifyMe::VERSION
         load_custom_check_functions
-        new(ARGV[0]).run
+        start = new(ARGV[0])
+        load_custom_check_tasks
+        start.run
       end
 
       def load_custom_check_functions
-        custom_notifyme_dir = File.join(ENV['HOME'], ".notifyme")
         file = File.join(custom_notifyme_dir, "check.rb")
         if File.exists? file
           load file
           puts "Loaded custom check functions from #{file}."
-        end
+        end        
+      end
 
+      def load_custom_check_tasks
         task_files = File.join(custom_notifyme_dir, 'check', '*.rb')
         Dir[task_files].each do |task_file|
           load task_file
@@ -42,6 +45,10 @@ module NotifyMe
             end
           end
         end
+      end
+
+      def custom_notifyme_dir
+        File.join(ENV['HOME'], ".notifyme")
       end
 
       def config(&block)
@@ -135,7 +142,7 @@ module NotifyMe
       return if @@log_directory.nil?
       log_file = File.join(@@log_directory, '/', "#{task_name}.log")
       File.open(log_file, 'a') do |f|
-        f.write "(#{Time.new.to_s}) #{command} : #{msg}\n"
+        f.write "[#{Time.new.to_s}] #{command} : #{msg}\n"
       end
     end
 
