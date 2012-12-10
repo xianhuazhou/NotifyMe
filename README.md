@@ -74,11 +74,12 @@ More please check the notifyme_config.rb file.
 
 ## built-in check functions (since v1.0.0)
 
-So far, NotifyMe has 2 built-in check functions, which are "check :process" and "check :tcp", e.g.:
+So far, NotifyMe has 3 built-in check functions, which are "check :process", "check :tcp" and "check :http"(since v1.0.1), e.g.:
 
 ```ruby
 t.command = lambda { check :process, :name => "nginx"}
 t.command = lambda { check :tcp, :host => "localhost", :port => 80}
+t.command = lambda { check :http, :url => "http://github.com", :include => 'Social Coding'}
 ```
 
 ## Add custom check functions into the "~/.notifyme/check.rb" file (since v1.0.0)

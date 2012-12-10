@@ -1,6 +1,6 @@
 module NotifyMe
 
-  VERSION = '1.0.0'
+  VERSION = '1.0.1'
 
   autoload :Task, 'notifyme/task'
   autoload :Log, 'notifyme/log'
