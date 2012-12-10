@@ -12,7 +12,6 @@ module NotifyMe
       # log 
       @@log_args = [:stdout]
       @@log_format = :text
-      @@log_directory = "/tmp"
 
       # tasks list
       @@tasks = []
@@ -86,8 +85,7 @@ module NotifyMe
       end
 
       def log_directory(directory)
-        FileUtils.mkdir_p directory unless File.directory? directory
-        @@log_directory = directory
+        $stderr.puts "Warn: the \"log_direcotry\" has been deprecated. You can find the error messages in the /var/log/ directory."
       end
     end
 
@@ -139,11 +137,7 @@ module NotifyMe
     end
 
     def log_error(task_name, command, msg)
-      return if @@log_directory.nil?
-      log_file = File.join(@@log_directory, '/', "#{task_name}.log")
-      File.open(log_file, 'a') do |f|
-        f.write "[#{Time.new.to_s}] #{command} : #{msg}\n"
-      end
+      Syslog.log Syslog::LOG_ERR, "[#{Time.new.to_s}] #{task_name} # #{command} : #{msg}"
     end
 
     def initialize(config_file)
