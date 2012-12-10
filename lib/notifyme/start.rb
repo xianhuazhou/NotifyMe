@@ -1,6 +1,7 @@
 module NotifyMe
 
-  VERSION = '1.0.1'
+  VERSION = '1.1.0-dev'
+  DEFAULT_CONFIG_FILE = "#{ENV['HOME']}/.notifyme/notifyme_config.rb"
 
   autoload :Task, 'notifyme/task'
   autoload :Log, 'notifyme/log'
@@ -17,9 +18,10 @@ module NotifyMe
       @@tasks = []
 
       def run!
-        puts 'NotifyMe v' + NotifyMe::VERSION
+        puts 'NotifyMe v' + VERSION
+        @@config_file = ARGV[0] || DEFAULT_CONFIG_FILE 
         load_custom_check_functions
-        start = new(ARGV[0])
+        start = new(@@config_file)
         load_custom_check_tasks
         start.run
       end
@@ -29,7 +31,7 @@ module NotifyMe
         if File.exists? file
           load file
           puts "Loaded custom check functions from #{file}."
-        end        
+        end
       end
 
       def load_custom_check_tasks
@@ -47,7 +49,47 @@ module NotifyMe
       end
 
       def custom_notifyme_dir
-        File.join(ENV['HOME'], ".notifyme")
+        notifyme_dir = File.join(ENV['HOME'], ".notifyme")
+        return notifyme_dir if File.directory?(notifyme_dir)
+
+        setup notifyme_dir
+      end
+
+      def setup(notifyme_dir)
+        FileUtils.mkdir_p notifyme_dir
+        FileUtils.mkdir_p File.join(notifyme_dir, 'check')
+
+        if @@config_file == DEFAULT_CONFIG_FILE 
+          default_config_file = File.expand_path(File.dirname(__FILE__) + '/../../notifyme_config.rb')
+          basic_config = File.read(default_config_file).split('# add some tasks').first
+          File.open("#{notifyme_dir}/notifyme_config.rb", "w") do |f|
+            f.write basic_config + "\nend"
+          end
+        end
+
+        File.open("#{notifyme_dir}/check.rb", "w") do |f|
+          f.write <<-EOF
+class NotifyMe::Check
+  class << self
+    # def something(args = {}) 
+    #  return "Something went wrong of your system" if not true 
+    # end 
+  end 
+end
+          EOF
+        end
+
+        File.open("#{notifyme_dir}/check/mytask.rb", "w") do |f|
+          f.write <<-EOF
+def check_mytask(t)
+  # t.sleep_time = 5
+  # t.command = lambda { check :something }
+  # t.restart_command = lambda { `/etc/init.d/something restart` }
+end
+          EOF
+        end
+
+        notifyme_dir
       end
 
       def config(&block)
@@ -94,6 +136,7 @@ module NotifyMe
       @mutex = Mutex.new
       @@tasks.each do |task|
         tasks_thread << Thread.new(task) do
+          next if task.name.nil? || task.sleep_time.nil?
           loop do
             Thread.current[:name] = task.name
             sleep task.sleep_time

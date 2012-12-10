@@ -28,8 +28,6 @@ NotifyMe::Start.config do
   # :csv, :text, :xml, :json
   log_format :text
 
-  log_directory '/tmp/notifyme'
-
   # add some tasks
 
   #
