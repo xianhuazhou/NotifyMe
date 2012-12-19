@@ -2,7 +2,7 @@ module NotifyMe
   class Check
     class << self
       def process(args = {})
-        unless %x{ps aux | grep #{args[:name]} | grep -v grep}.strip == ''
+        if %x{ps aux | grep #{args[:name]} | grep -v grep}.strip == ''
           raise "Process #{args[:name]} is not running!"
         end
       end
