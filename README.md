@@ -128,7 +128,7 @@ The output from every task's command will be processed (send to endpoints such a
 
 ## Version
 
-v 1.0.0
+v 1.0.2
 
 ## TODO
 
