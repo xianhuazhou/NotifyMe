@@ -18,7 +18,7 @@ NotifyMe is a script running as a cronjob in background,  can take care more tha
 
     # notifyme_daemon start --(double dash here) /absolute/path/to/your/notifyme_config.rb
 
-    or run it without config path if the path of your config file is "/root/.pac/notifyme_config.rb".
+    or run it without config path if the path of your config file is "/root/.notifyme/notifyme_config.rb".
 
     # notifyme_daemon start
 
