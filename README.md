@@ -41,8 +41,6 @@ NotifyMe is a script running in background, it can take care more than one tasks
 ### Check HTTP Server (e.g. Nginx)
 
 ```ruby
-  require 'socket'
-
   NotifyMe::Start.config do
     # output to the console
     log :stdout
@@ -98,12 +96,12 @@ t.command = lambda { check :tcp, :host => "localhost", :port => 80}
 t.command = lambda { check :http, :url => "http://github.com", :include => 'Social Coding'}
 ```
 
-## Add custom check functions into the "~/.notifyme/check.rb" file (since v1.0.0)
+## Add custom check functions into the "/root/.notifyme/check.rb" file (since v1.0.0)
 
-You also can write your own check functions into the `~/.notifyme/check.rb` file, e.g.
+You also can write your own check functions into the `/root/.notifyme/check.rb` file, e.g.
 
 ```ruby
-# file: ~/.notifyme/check.rb
+# file: /root/.notifyme/check.rb
 class NotifyMe::Check
   class << self
     def mysql(args = {}) 
@@ -124,13 +122,13 @@ task :check_mysql do |t|
 end
 ```
 
-## Add tasks into the "~/.notifyme/check/" directory (since v1.0.0)
+## Add tasks into the "/root/.notifyme/check/" directory (since v1.0.0)
 
-Instead of put all of tasks into the `notifyme_config.rb` file. you can also put them into the `~/.notifyme/check/` directory, one task one file, it's easy to manage them if you have too many things to check.
+Instead of put all of tasks into the `notifyme_config.rb` file. you can also put them into the `/root/.notifyme/check/` directory, one task one file, it's easy to manage them if you have too many things to check.
 e.g.
 
 ```ruby
-# file: ~/.notifyme/check/redis.rb
+# file: /root/.notifyme/check/redis.rb
 
 def check_redis(t)
   t.sleep_time = 5
