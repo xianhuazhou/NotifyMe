@@ -1,6 +1,12 @@
 ## Introduction
 
-NotifyMe is a script running as a cronjob in background,  can take care more than one tasks (by Ruby Threads), and push the results(error messages usually) to different endpoints(stdout, mail, file etc.) with different formats such as xml, json, csv etc. if something goes wrong. It depends on what's you need.
+NotifyMe is a script running in background, it can take care more than one tasks (by Ruby Threads), and push the results(error messages usually) to different endpoints(stdout, mails, files etc.) with different formats such as xml, json, csv etc. if something went wrong. 
+
+## Features
+
+* Monitoring processes, if any of processes stopped for whatever reasons, it can notify you and restart the stopped processes automatically.
+* Run programs in every x seconds as cron jobs.
+* Checking tasks as Nagios does but without interface.
 
 ## Installation
 
