@@ -4,13 +4,23 @@ NotifyMe is a script running as a cronjob in background,  can take care more tha
 
 ## Installation
 
-gem install notifyme
+    # gem install notifyme
+
+## Initialize configuration
+
+    # notifyme
+
+    The command will create a "/root/.notifyme" directory and initialize some basic config files.
 
 ## Run it (with root permission)
 
 ### run in the background
 
     # notifyme_daemon start --(double dash here) /absolute/path/to/your/notifyme_config.rb
+
+    or run it without config path if the path of your config file is "/root/.pac/notifyme_config.rb".
+
+    # notifyme_daemon start
 
 ### debug (use Ctrl + C to stop it)
 
