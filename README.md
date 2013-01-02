@@ -136,13 +136,42 @@ def check_redis(t)
 end
 ```
 
+## Nagios plugin
+
+You can download it from http://www.nagios.org/download/plugins/ and install it into the "/usr/local/nagios/libexec" directory for example.
+Then, NotifyMe can work with the plugin like:
+
+```ruby
+# file: /root/.notifyme/check/ssh.rb
+
+def check_ssh(t)
+  t.sleep_time = 60
+  t.command = lambda { nagios_check :ssh, "localhost" }
+end
+```
+
+The above check task will invoke the "/usr/local/nagios/libexec/check_ssh localhost" command. 
+
+If the plugin is not installed in the "/usr/local/nagios/libexec" directory, you need to set it manually in the "/root/.notifyme/notifyme_config.rb" file:
+
+```ruby
+# file: /root/.notifyme/notifyme_config.rb
+
+NotifyMe::Start.config do
+# ...
+  nagios_directory "/usr/lib/nagios/plugins"
+# ...
+end
+
+```
+
 ## Output
 
 The output from every task's command will be processed (send to endpoints such as email, console etc.) only if the output is not empty, otherwise do nothing.
 
 ## Version
 
-v 1.0.2
+v 1.1.0
 
 ## TODO
 

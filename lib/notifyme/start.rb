@@ -15,7 +15,7 @@ module NotifyMe
       @@log_format = :text
 
       # nagios
-      @@nagios_directory = "/usr/local/nagios"
+      @@nagios_directory = "/usr/local/nagios/libexec"
 
       # tasks list
       @@tasks = []
@@ -122,7 +122,7 @@ end
       end
 
       def nagios_check(name, args = '')
-        cmd = "#{@@nagios_directory}/libexec/check_#{name} #{args}"
+        cmd = "#{@@nagios_directory}/check_#{name} #{args}"
         begin
           result = `#{cmd}`
           if $?.to_i == 0
