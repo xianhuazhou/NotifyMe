@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
 
   s.summary = "It's a kind of cronjob."
-  s.description = "NotifyMe takes care more than one tasks and process their results for you, it's similar to *NIX's cronjob."
+  s.description = "NotifyMe takes care more than one tasks and process their results for you, it's similar to *NIX's cronjob but can do more."
 
   s.bindir = 'bin'
   s.executables = ['notifyme_daemon', 'notifyme']

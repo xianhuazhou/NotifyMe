@@ -1,5 +1,0 @@
-v0.2
-  auto restart the service by the restart_command if it's failed
-
-v0.1-dev
-  the first dev-version.
