@@ -1,6 +1,6 @@
 module NotifyMe
 
-  VERSION = '1.0.2'
+  VERSION = '1.1.0'
   DEFAULT_CONFIG_FILE = "#{ENV['HOME']}/.notifyme/notifyme_config.rb"
 
   autoload :Task, 'notifyme/task'
@@ -156,7 +156,6 @@ end
         task.result = task.command.call
         task.end_run_time = Time.now.to_i
       rescue Exception => e
-        log_error task.name, task.command, e.to_s
         task.result = e.to_s
       end
 
@@ -167,20 +166,26 @@ end
       begin
         task.restart_command.call if task.restart_command
       rescue Exception => e
-        log_error task.name, task.restart_command, e.to_s
+        syslog_error task.name, task.restart_command, e.to_s
       end
 
       @mutex.synchronize do 
         begin
-          task.logger << task
-        rescue Exception =>  e
-          puts e.backtrace.join("\n")
+          if task.logger.can_log? task
+            task.logger << task
+            syslog_error task.name, task.command, task.result.to_s
+            task.logger.add_log_history task
+          end
+        rescue Exception => e
+          syslog_error task.name, "save_error_log", e.to_s + "\n" + e.backtrace.join("\n")
         end
       end
     end
 
-    def log_error(task_name, command, msg)
+    def syslog_error(task_name, command, msg)
+      Syslog.open 'notifyme', Syslog::LOG_NDELAY, Syslog::LOG_USER
       Syslog.log Syslog::LOG_ERR, "[#{Time.new.to_s}] #{task_name} # #{command} : #{msg}"
+      Syslog.close
     end
 
     def initialize(config_file)

@@ -25,8 +25,33 @@ module NotifyMe
     end
 
     class Logger
+      # store the time of the errors for each task
+      @@log_history = {}
+
+      # 30s, 1min, 5min, 10min, 30min, 1hour, 6hours, 12hours, 1day, 1week, 1month (unit: seconds)
+      LOG_FREQUENCE = [30, 60, 300, 600, 1800, 3600, 21600, 43200, 86400, 604800, 2592000]
+
       def initialize(parameters = {})
         @parameters = parameters
+      end
+
+      def can_log?(task)
+        history = @@log_history[task.name]
+        return true if history.nil?
+
+        checkpoint = LOG_FREQUENCE[history.size - 1] || LOG_FREQUENCE.last
+        return true if Time.now.to_i - history.last > checkpoint 
+
+        false
+      end
+
+      def add_log_history(task)
+        now = Time.now.to_i
+        if @@log_history[task.name].nil?
+          @@log_history[task.name] = [now]
+        else
+          @@log_history[task.name] << now
+        end
       end
 
       protected
