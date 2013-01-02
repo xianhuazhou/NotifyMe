@@ -28,6 +28,9 @@ NotifyMe::Start.config do
   # :csv, :text, :xml, :json
   log_format :text
 
+  # set nagios directory
+  # nagios_directory "/usr/local/nagios"
+
   # add some tasks
 
   #

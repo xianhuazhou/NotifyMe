@@ -14,6 +14,9 @@ module NotifyMe
       @@log_args = [:stdout]
       @@log_format = :text
 
+      # nagios
+      @@nagios_directory = "/usr/local/nagios"
+
       # tasks list
       @@tasks = []
 
@@ -118,6 +121,20 @@ end
         end
       end
 
+      def nagios_check(name, args = '')
+        cmd = "#{@@nagios_directory}/libexec/check_#{name} #{args}"
+        begin
+          result = `#{cmd}`
+          if $?.to_i == 0
+            nil
+          else
+            "#{result.strip} (nagios check)"
+          end
+        rescue Exception => e
+          "Nagios check_#{name} failed: #{e}"
+        end
+      end
+
       def log(*args)
         @@log_args = args
       end
@@ -126,8 +143,12 @@ end
         @@log_format = format
       end
 
+      def nagios_directory(directory)
+        @@nagios_directory = directory
+      end
+
       def log_directory(directory)
-        $stderr.puts "Warn: the \"log_direcotry\" has been deprecated. You can find the error messages in the /var/log/ directory."
+        $stderr.puts "Warn: the \"log_direcotry\" has been deprecated. You can find the error messages in the /var/log/syslog file."
       end
     end
 
