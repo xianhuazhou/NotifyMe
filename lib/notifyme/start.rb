@@ -1,7 +1,7 @@
 module NotifyMe
 
   VERSION = '1.1.1'
-  DEFAULT_CONFIG_FILE = "#{ENV['HOME']}/.notifyme/notifyme_config.rb"
+  DEFAULT_CONFIG_FILE = "/root/.notifyme/notifyme_config.rb"
 
   autoload :Task, 'notifyme/task'
   autoload :Log, 'notifyme/log'
