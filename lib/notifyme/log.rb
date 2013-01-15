@@ -54,6 +54,10 @@ module NotifyMe
         end
       end
 
+      def clean_log_history!(task)
+        @@log_history.delete(task.name) if @@log_history[task.name]
+      end
+
       protected
       def generate(task)
         method("to_#{task.log_format}").call task
