@@ -1,6 +1,6 @@
 module NotifyMe
 
-  VERSION = '1.1.0'
+  VERSION = '1.1.1'
   DEFAULT_CONFIG_FILE = "#{ENV['HOME']}/.notifyme/notifyme_config.rb"
 
   autoload :Task, 'notifyme/task'
@@ -180,10 +180,13 @@ end
         task.result = e.to_s
       end
 
-      # works fine.
-      return if task.result.to_s.empty?
+      # the task works fine.
+      if task.result.to_s.empty?
+        task.logger.clean_log_history! task
+        return
+      end
 
-      # restart the command if need
+      # restart the command if needed
       begin
         task.restart_command.call if task.restart_command
       rescue Exception => e

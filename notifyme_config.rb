@@ -29,7 +29,7 @@ NotifyMe::Start.config do
   log_format :text
 
   # set nagios directory
-  # nagios_directory "/usr/local/nagios"
+  # nagios_directory "/usr/lib/nagios/plugins"
 
   # add some tasks
 
