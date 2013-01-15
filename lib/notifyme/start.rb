@@ -207,6 +207,7 @@ end
     end
 
     def syslog_error(task_name, command, msg)
+      Syslog.close if Syslog.opened?
       Syslog.open 'notifyme', Syslog::LOG_NDELAY, Syslog::LOG_USER
       Syslog.log Syslog::LOG_ERR, "[#{Time.new.to_s}] #{task_name} # #{command} : #{msg}"
       Syslog.close
