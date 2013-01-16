@@ -197,8 +197,8 @@ end
         begin
           if task.logger.can_log? task
             task.logger << task
-            syslog_error task.name, task.command, task.result.to_s
             task.logger.add_log_history task
+            syslog_error task.name, "!", task.result.to_s
           end
         rescue Exception => e
           syslog_error task.name, "save_error_log", e.to_s + "\n" + e.backtrace.join("\n")
