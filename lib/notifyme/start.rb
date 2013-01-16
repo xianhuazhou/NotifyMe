@@ -1,6 +1,6 @@
 module NotifyMe
 
-  VERSION = '1.1.2'
+  VERSION = '1.1.3'
   DEFAULT_CONFIG_FILE = "/root/.notifyme/notifyme_config.rb"
 
   autoload :Task, 'notifyme/task'
