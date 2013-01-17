@@ -35,6 +35,10 @@ module NotifyMe
         @parameters = parameters
       end
 
+      def fact(name)
+        Facter.fact(name).value
+      end
+
       def can_log?(task)
         history = @@log_history[task.name]
         return true if history.nil?
@@ -73,6 +77,13 @@ module NotifyMe
       def to_xml(task)
         require 'rexml/document'
         xml = REXML::Element.new 'task'
+
+        extra_task_info.each do |k, v|
+          el = REXML::Element.new k.to_s
+          el.text = v.to_s 
+          xml.add_element el
+        end
+
         fields.each do |f|
           el = REXML::Element.new f.to_s
           el.text = task.send(f)
@@ -83,7 +94,7 @@ module NotifyMe
 
       def to_csv(task)
         require 'csv'
-        row = []
+        row = extra_task_info.values 
         fields.each do |f|
           row << task.send(f)
         end
@@ -92,6 +103,11 @@ module NotifyMe
 
       def to_text(task)
         output = ''
+        output << "\nSystem info:\n---------------\n"
+        extra_task_info.each do |k, v|
+          output << "#{k}: #{v}\n"
+        end
+        output << "\nTask info:\n---------------\n"
         fields.each do |f|
           output << "#{f}: #{task.send(f)}\n"
         end
@@ -99,7 +115,7 @@ module NotifyMe
       end
 
       def to_hash(task)
-        hash = {}
+        hash = extra_task_info
         fields.each do |f|
           hash[f] = task.send(f)
         end
@@ -108,6 +124,14 @@ module NotifyMe
 
       def fields
         [:name, :sleep_time, :start_run_time, :end_run_time, :result]
+      end
+
+      def extra_task_info
+        {
+          :hostname => fact(:hostname),
+          :ipaddress => fact(:ipaddress),
+          :system => fact(:lsbdistdescription)
+        }
       end
     end
   end

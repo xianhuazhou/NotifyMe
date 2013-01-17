@@ -25,4 +25,5 @@ Gem::Specification.new do |s|
   s.add_dependency('daemons', '>= 1.1.0')
   s.add_dependency('json_pure', '>= 1.4.2')
   s.add_dependency('http_request.rb', '>= 1.1.13')
+  s.add_dependency('facter', '>= 1.6.17')
 end

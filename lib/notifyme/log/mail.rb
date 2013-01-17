@@ -20,8 +20,8 @@ module NotifyMe
 
         default_from_email = 'notifyme@' + default_host
 
-        param[:subject] = "NotifyMe report: %s" 
-        param[:subject] = param[:subject] % task.name
+        param[:subject] = "NotifyMe report (#{fact(:hostname)} # #{fact(:ipaddress)}): #{task.name}"
+        param[:subject] = param[:subject] % 
 
         param[:from_email] ||= param[:account]
         param[:from_email] ||= default_from_email
