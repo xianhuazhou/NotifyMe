@@ -193,11 +193,11 @@ def check_mysqlserver(t)
 end
 ```
 
-Notice: all of tasks are stored in the `/root/.notifyme/check/` directory, one task per ruby file, the function name format is `check\_#{task\_name}`, the task name is same as filename.
+Notice: all of tasks are stored in the `/root/.notifyme/check/` directory, one task per ruby file, the function name format is `check_#{task_name}`, the task name is same as filename.
 
 ## Nagios plugin
 
-Instead of write check functions by yourself, notifyme can work with nagios plugins, there are many good `check\_\*` programs we can use.
+Instead of write check functions by yourself, notifyme can work with nagios plugins, there are many good `check_*` programs we can use.
 
 You can download it from http://www.nagios.org/download/plugins/ and install it into the "/usr/local/nagios/libexec" directory for example.
 Then, NotifyMe can work with the plugin like:
