@@ -4,9 +4,10 @@ NotifyMe is a monitoring script, it can monitor processes, services etc., and pu
 
 ## Features
 
-* Monitoring processes, if any of processes stopped for whatever reasons, it can notify you and restart the stopped processes automatically if needed.
-* Run programs in every x seconds as cron jobs.
-* Checking tasks as Nagios does (can work with the nagios plugins).
+* Monitoring processes, whenever a process is stopped, it can notify you and restart the stopped process automatically if needed.
+* Run programs in every x seconds/minutes/hours as cron jobs.
+* Checking tasks as Nagios does (can also work with the nagios plugins).
+* Focusing on a single server but can monitoring any external services such as http, ssh etc..
 
 *Notice: you need root permission to play aroung with notifyme*
 
@@ -57,7 +58,7 @@ NotifyMe::Start.config do
 end
 ```
 
-### send log via email notifycation
+### send log via email notification
 
 ```ruby
 # file: /root/.notifyme/notifyme\_config.rb
@@ -228,6 +229,11 @@ end
 ## Output
 
 The output from every task's command will be processed (send to endpoints such as email, console etc.) only if the output is not empty, otherwise do nothing.
+
+## Start notifyme automatically
+
+If your notifyme_daemon is installed in "/usr/local/bin/notifyme_daemon".
+You can put `/usr/local/bin/notifyme\_daemon start` into the `/etc/rc.local` file.
 
 ## Version
 
