@@ -11,14 +11,14 @@ NotifyMe::Start.config do
     :password => '***',
 
     :from_email => 'from@gmail.com',
-    :from_name => 'from name',
+    :from_name => 'From Name',
 
     :to_email => 'to@gmail.com',
-    :to_name => 'to name'
+    :to_name => 'To Name'
 
     # or
-    :to_email => {'User a' => 'a@gmail.com', 'User b' => 'b@gmail.com'}
-    :to_email => ['User a <a@gmail.com>', 'User b<b@gmail.com'] 
+    :to_email => {'User A' => 'a@gmail.com', 'User B' => 'b@gmail.com'}
+    :to_email => ['User A <a@gmail.com>', 'User B<b@gmail.com'] 
 =end
 
   # log :file, '/tmp/test.txt'
@@ -30,8 +30,10 @@ NotifyMe::Start.config do
 
   # set nagios directory
   # nagios_directory "/usr/lib/nagios/plugins"
+  #
 
-  # add some tasks
+  ## !! NOTICE: for new installation,
+  ## !!         It's not recommended that to put "check tasks" in the notifyme_config.rb file.
 
   #
   # check disk space usage every 60 seconds, 
@@ -41,7 +43,7 @@ NotifyMe::Start.config do
     t.sleep_time = 60
     t.command = lambda {
       if %x{df -h}.scan(/\s+(\d+)%\s+/).find {|pcent| pcent.first.to_i > 95}
-        "Warning: at least 1 disk space usage > 95%"
+        raise "Warning: at least 1 disk space usage > 95%"
       else
         nil
       end

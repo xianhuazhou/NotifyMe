@@ -4,9 +4,11 @@ NotifyMe is a script running in background, it can take care more than one tasks
 
 ## Features
 
-* Monitoring processes, if any of processes stopped for whatever reasons, it can notify you and restart the stopped processes automatically.
+* Monitoring processes, if any of processes stopped for whatever reasons, it can notify you and restart the stopped processes automatically if needed.
 * Run programs in every x seconds as cron jobs.
 * Checking tasks as Nagios does but without interface.
+
+*Notice: you need root permission to play aroung with notifyme*
 
 ## Installation
 
@@ -18,152 +20,206 @@ NotifyMe is a script running in background, it can take care more than one tasks
 
     The command will create a "/root/.notifyme" directory and initialize some basic config files.
 
-## Run it (with root permission)
+## Run it
 
 ### run in the background
-
-    # notifyme_daemon start --(double dash here) /absolute/path/to/your/notifyme_config.rb
-
-    or run it without config path if the path of your config file is "/root/.notifyme/notifyme_config.rb".
 
     # notifyme_daemon start
 
 ### debug (use Ctrl + C to stop it)
 
-    # notifyme_daemon run --(double dash here) /absolute/path/to/your/notifyme_config.rb
+    # notifyme
+
+    or 
+
+    # notifyme_daemon run
 
 ### stop
 
     # notifyme_daemon stop
 
+### restart
+
+    # notifyme_daemon restart
+
+## Configuration
+
+### output log (text format) to console, it's a good start to test and debug.
+
+  ```ruby
+    NotifyMe::Start.config do
+      # output to the console
+      log :stdout
+
+      # output format is text
+      log_format :text
+    end
+  ```
+
+### send log via email notifycation
+
+  ```ruby
+    NotifyMe::Start.config do
+      # send log to a specified email address (e.g. gmail)
+      log :mail, 
+        :host => 'smtp.gmail.com',
+        :helo_domain => 'gmail.com',
+        :tls => true,
+
+        :account => 'xxx@gmail.com', 
+        :password => '***',
+
+        :from_email => 'from@gmail.com',
+        :from_name => 'From Name',
+
+        :to_email => 'to@gmail.com',
+        :to_name => 'To Name'
+
+      # or via the default local SMTP server (e.g. postfix)
+      # log :mail, :from_email => 'you@email.com', :to_email => 'to@email.com'
+
+      log_format :text
+    end
+  ```
+
+### append log to a local file
+
+  ```ruby
+    NotifyMe::Start.config do
+      log :file, '/var/log/notifyme.log'
+      log_format :text
+    end
+  ```
+
+### supported log formats: text, json, xml, hash, csv
+
+  ```ruby
+    NotifyMe::Start.config do
+      log :stdout
+
+      # text
+      # log_format :text
+
+      # json
+      # log_format :json
+
+      # xml
+      # log_format :xml
+
+      # hash
+      # log_format :hash
+
+      # csv 
+      # log_format :csv
+    end
+  ```
+
+Notice: the "hash" format doesn't work with "log :email".
+
 ## Examples
 
 ### Check HTTP Server (e.g. Nginx)
 
-```ruby
-  NotifyMe::Start.config do
-    # output to the console
-    log :stdout
-
-    # output format is text
-    log_format :text
-
-    # define the task 
-    task :check_http_server do |t| 
-
-      # running every 5 seconds
+  ```ruby
+    # file: /root/.notifyme/check/nginx.rb
+    def check_nginx(t)
+      # checking nginx every 5 seconds 
       t.sleep_time = 5 
 
-      # check command
+      # check nginx if running via tcp 
       t.command = lambda { check :tcp, :host => 'localhost', :port => 80 }
+      # or check if there is a nginx process running.
+      # t.command = lambda { check :process, :name => 'nginx' }
 
-      # if the server is not running, the restart_command will be executed
+      # if the above checking command failed, then the restart_command will be executed
       t.restart_command = lambda { %x{/etc/init.d/nginx start} }
     end 
-
-  end
-```
+  ```
 
 ### Check the "cupsd" process (from "ps -e")
 
-```ruby
-  NotifyMe::Start.config do
-    log :stdout
-    log_format :json 
-    task :check_cupsd do |t| 
+  ```ruby
+    # file: /root/.notifyme/check/cupsd.rb
+    def check_cupsd(t)
       t.sleep_time = 5 
       t.command = lambda {
-        if %x{ps -e}.include? " cupsd"
-          nil 
-        else
-          "Warnning: the process cupsd is not running!"
+        unless %x{ps -e}.include? " cupsd"
+          raise "Warnning: the process cupsd is not running!"
         end 
       }   
       t.restart_command = lambda { `/etc/init.d/cups start` }   
-    end 
-  end
-```
-
-More please check the notifyme_config.rb file.
+    end
+  ```
 
 ## built-in check functions (since v1.0.0)
 
 So far, NotifyMe has 3 built-in check functions, which are "check :process", "check :tcp" and "check :http"(since v1.0.1), e.g.:
 
-```ruby
-t.command = lambda { check :process, :name => "nginx"}
-t.command = lambda { check :tcp, :host => "localhost", :port => 80}
-t.command = lambda { check :http, :url => "http://github.com", :include => 'Social Coding'}
-```
+  ```ruby
+  t.command = lambda { check :process, :name => "nginx"}
+  t.command = lambda { check :tcp, :host => "localhost", :port => 80}
+  t.command = lambda { check :http, :url => "http://github.com", :include => 'Social Coding'}
+  ```
 
 ## Add custom check functions into the "/root/.notifyme/check.rb" file (since v1.0.0)
 
 You also can write your own check functions into the `/root/.notifyme/check.rb` file, e.g.
 
-```ruby
-# file: /root/.notifyme/check.rb
-class NotifyMe::Check
-  class << self
-    def mysql(args = {}) 
-      require 'mysql2'
-      Mysql2::Client.new args 
+  ```ruby
+  # file: /root/.notifyme/check.rb
+  class NotifyMe::Check
+    class << self
+      def mysql(args = {}) 
+        require 'mysql2'
+        Mysql2::Client.new args 
+      end 
     end 
-  end 
-end
-```
+  end
+  ```
 
 Then you can use the `check :mysql` function like:
 
-```ruby
-task :check_mysql do |t|
-  t.sleep_time = 5
-  t.command = lambda { check :mysql, :host => 'localhost', :username => 'root', :password => 'pa$$' }
-  t.restart_command = lambda { `/etc/init.d/mysqld restart` }
-end
-```
+  ```ruby
+  # file: /root/.notifyme/check/mysqlserver.rb
+  def check_mysqlserver(t)
+    t.sleep_time = 5
+    t.command = lambda { check :mysql, :host => 'localhost', :username => 'root', :password => 'pa$$' }
+    t.restart_command = lambda { `/etc/init.d/mysqld start` }
+  end
+  ```
 
-## Add tasks into the "/root/.notifyme/check/" directory (since v1.0.0)
-
-Instead of put all of tasks into the `notifyme_config.rb` file. you can also put them into the `/root/.notifyme/check/` directory, one task one file, it's easy to manage them if you have too many things to check.
-e.g.
-
-```ruby
-# file: /root/.notifyme/check/redis.rb
-
-def check_redis(t)
-  t.sleep_time = 5
-  t.command = lambda { check :tcp, :host => 'localhost', :port => 6379 }
-end
-```
+Notice: all of tasks are stored in the `/root/.notifyme/check/` directory, one task per ruby file, the function name format is `check\_#{task\_name}`, the task name is same as filename.
 
 ## Nagios plugin
+
+Instead of write check functions by yourself, notifyme can work with nagios plugins, there are many good `check\_\*` programs we can use.
 
 You can download it from http://www.nagios.org/download/plugins/ and install it into the "/usr/local/nagios/libexec" directory for example.
 Then, NotifyMe can work with the plugin like:
 
-```ruby
-# file: /root/.notifyme/check/ssh.rb
+  ```ruby
+  # file: /root/.notifyme/check/ssh.rb
 
-def check_ssh(t)
-  t.sleep_time = 60
-  t.command = lambda { nagios_check :ssh, "localhost" }
-end
-```
+  def check_ssh(t)
+    t.sleep_time = 60
+    t.command = lambda { nagios_check :ssh, "localhost" }
+  end
+  ```
 
 The above check task will invoke the "/usr/local/nagios/libexec/check_ssh localhost" command. 
 
 If the plugin is not installed in the "/usr/local/nagios/libexec" directory, you need to set it manually in the "/root/.notifyme/notifyme_config.rb" file:
 
-```ruby
-# file: /root/.notifyme/notifyme_config.rb
+  ```ruby
+  # file: /root/.notifyme/notifyme\_config.rb
 
-NotifyMe::Start.config do
-# ...
-  nagios_directory "/usr/lib/nagios/plugins"
-# ...
-end
+  NotifyMe::Start.config do
+  # ...
+    nagios_directory "/usr/lib/nagios/plugins"
+  # ...
+  end
 
-```
+  ```
 
 ## Output
 
