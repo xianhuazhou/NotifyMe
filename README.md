@@ -48,7 +48,7 @@ NotifyMe is a monitoring script, it can monitor processes, services etc., and pu
 ### output log (text format) to console, it's a good start to test and debug.
 
 ```ruby
-# file: /root/.notifyme/notifyme\_config.rb
+# file: /root/.notifyme/notifyme_config.rb
 NotifyMe::Start.config do
   # output to the console
   log :stdout
@@ -61,7 +61,7 @@ end
 ### send log via email notification
 
 ```ruby
-# file: /root/.notifyme/notifyme\_config.rb
+# file: /root/.notifyme/notifyme_config.rb
 NotifyMe::Start.config do
   # send log to a specified email address (e.g. gmail)
   log :mail, 
@@ -88,7 +88,7 @@ end
 ### append log to a local file
 
 ```ruby
-# file: /root/.notifyme/notifyme\_config.rb
+# file: /root/.notifyme/notifyme_config.rb
 NotifyMe::Start.config do
   log :file, '/var/log/notifyme.log'
   log_format :text
@@ -98,7 +98,7 @@ end
 ### supported log formats: text, json, xml, hash, csv
 
 ```ruby
-# file: /root/.notifyme/notifyme\_config.rb
+# file: /root/.notifyme/notifyme_config.rb
 NotifyMe::Start.config do
   log :stdout
 
@@ -216,8 +216,7 @@ The above check task will invoke the "/usr/local/nagios/libexec/check_ssh localh
 If the plugin is not installed in the "/usr/local/nagios/libexec" directory, you need to set it manually in the "/root/.notifyme/notifyme_config.rb" file:
 
 ```ruby
-# file: /root/.notifyme/notifyme\_config.rb
-
+# file: /root/.notifyme/notifyme_config.rb
 NotifyMe::Start.config do
 # ...
   nagios_directory "/usr/lib/nagios/plugins"
@@ -233,7 +232,7 @@ The output from every task's command will be processed (send to endpoints such a
 ## Start notifyme automatically
 
 If your notifyme_daemon is installed in "/usr/local/bin/notifyme_daemon".
-You can put `/usr/local/bin/notifyme\_daemon start` into the `/etc/rc.local` file.
+You can put `/usr/local/bin/notifyme_daemon start` into the `/etc/rc.local` file.
 
 ## Version
 
