@@ -30,8 +30,9 @@ module NotifyMe
           generate(task) +
           param[:body_footer].to_s
 
+        smtp_host = (param[:address] || param[:host]) || default_host
         smtp = Net::SMTP.new(
-          (param[:address] || param[:host]) || default_host, 
+          smtp_host, 
           param[:port] || default_port
         )
 
@@ -65,9 +66,9 @@ module NotifyMe
         "From: #{param[:from_name] || param[:from_email]} <#{param[:from_email]}>\r\n" \
         << "To: #{to}\r\n" \
         << "Subject: #{param[:subject]}\r\n" \
-        << "Date: #{time.to_s}\r\n" \
+        << "Date: #{time.strftime '%a, %d %b %Y %H:%M:%S %z'}\r\n" \
         << "Content-type: text/plain; charset=UTF-8\r\n" \
-          << "Message-Id: <notifyme.#{task.name}.#{time.to_i}@example.com>\r\n" \
+          << "Message-Id: <notifyme.#{task.name}.#{time.to_i}@#{smtp_host}>\r\n" \
         << "\r\n" \
           << param[:body]
       end
