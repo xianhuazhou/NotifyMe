@@ -5,7 +5,6 @@ NotifyMe::Start.config do
   log :mail, 
     :host => 'smtp.gmail.com',
     :helo_domain => 'gmail.com',
-    :tls => true,
 
     :account => 'xxx@gmail.com', 
     :password => '***',

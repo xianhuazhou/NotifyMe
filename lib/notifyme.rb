@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'mail'
 require 'thread'
 require 'fileutils'
 require 'syslog'
