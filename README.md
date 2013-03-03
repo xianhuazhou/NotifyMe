@@ -67,7 +67,6 @@ NotifyMe::Start.config do
   log :mail, 
     :host => 'smtp.gmail.com',
     :helo_domain => 'gmail.com',
-    :tls => true,
 
     :account => 'xxx@gmail.com', 
     :password => '***',
@@ -234,9 +233,17 @@ The output from every task's command will be processed (send to endpoints such a
 If your notifyme_daemon is installed in "/usr/local/bin/notifyme_daemon".
 You can put `/usr/local/bin/notifyme_daemon start` into the `/etc/rc.local` file.
 
+## Can't send emails out with smtp?
+
+Try to remove ":tls => true".
+
+## Where can I see the error messages?
+
+Check the syslog file: /var/log/syslog.
+
 ## Version
 
-v 1.1.4
+v 1.1.5
 
 ## TODO
 
